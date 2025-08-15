@@ -67,34 +67,53 @@ public class PracticaIPC1{
         }
      }
 
-     //clase de sistema
-     static class sistema{
-        private ArrayList <personaje> personajes;
-        private ArrayList <pelea> peleas;
+     // Clase Sistema
+    static class Sistema {
+        private ArrayList<Personaje> personajes;
+        private ArrayList<Pelea> peleas;
         private Scanner scanner;
-
-        public sistema() {
+        
+        public Sistema() {
             personajes = new ArrayList<>();
             peleas = new ArrayList<>();
-            scanner = new Scanner(Systen.in);
+            scanner = new Scanner(System.in);
         }
-          
-        public void mostrarMenu(){
+        
+        public void mostrarMenu() {
             while (true) {
-                system.out.println("\n--- MENÚ PRINCIPAL ---");
-                system.out.println("1. Agregar personaje");
-                system.out.println("2. Modificar personaje");
-                system.out.println("3. Eliminar personaje");
-                system.out.println("4. Ver datos de un personaje");
-                system.out.println("5. Ver listado de personaje");
-                system.out.println("6. Realizar pelea entre personajes");
-                system.out.println("7. Ver historial de peleas");
-                system.out.println("8. VEr datos del estudiante");
-                system.out.println("9. Salir");
-                system.out.println("Seleccione alguna de las opciones: ");
+                System.out.println("\n--- MENÚ PRINCIPAL ---");
+                System.out.println("1. Agregar personaje");
+                System.out.println("2. Modificar personaje");
+                System.out.println("3. Eliminar personaje");
+                System.out.println("4. Ver datos de un personaje");
+                System.out.println("5. Ver listado de personajes");
+                System.out.println("6. Realizar pelea entre personajes");
+                System.out.println("7. Ver historial de peleas");
+                System.out.println("8. Ver datos del estudiante");
+                System.out.println("9. Salir");
+                System.out.print("Seleccione una opción: ");
                 
-
-
+                try {
+                    int opcion = Integer.parseInt(scanner.nextLine());
+                    
+                    switch (opcion) {
+                        case 1: agregarPersonaje(); break;
+                        case 2: modificarPersonaje(); break;
+                        case 3: eliminarPersonaje(); break;
+                        case 4: verDatosPersonaje(); break;
+                        case 5: verListadoPersonajes(); break;
+                        case 6: realizarPelea(); break;
+                        case 7: verHistorialPeleas(); break;
+                        case 8: mostrarDatosEstudiante(); break;
+                        case 9:
+                            System.out.println("Saliendo del sistema...");
+                            return;
+                        default:
+                            System.out.println("Opción no válida. Intente nuevamente.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Debe ingresar un número válido.");
+                }
             }
         }
-     }
+    }   
