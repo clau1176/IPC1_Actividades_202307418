@@ -78,6 +78,23 @@ public class PracticaIPC1{
             peleas = new ArrayList<>();
             scanner = new Scanner(Systen.in);
         }
+          
+        public void mostrarMenu(){
+            while (true) {
+                system.out.println("\n--- MENÚ PRINCIPAL ---");
+                system.out.println("1. Agregar personaje");
+                system.out.println("2. Modificar personaje");
+                system.out.println("3. Eliminar personaje");
+                system.out.println("4. Ver datos de un personaje");
+                system.out.println("5. Ver listado de personaje");
+                system.out.println("6. Realizar pelea entre personajes");
+                system.out.println("7. Ver historial de peleas");
+                system.out.println("8. VEr datos del estudiante");
+                system.out.println("9. Salir");
+                system.out.println("Seleccione alguna de las opciones: ");
+                
 
 
+            }
+        }
      }
