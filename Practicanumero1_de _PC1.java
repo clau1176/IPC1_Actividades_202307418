@@ -42,3 +42,27 @@ public class PracticaIPC1{
     
     }
 }
+
+     ///clase pelea
+     static class pelea{
+        private Personaje personaje1;
+        private Personaje personaje2;
+        private local.date.time fechahora;
+
+        public Pelea(Personaje personaje1, Personaje personaje2){
+            this.personaje1 = personaje1;
+            this.personaje2 = personaje2;
+            this.fechahora = LocalDateTime.now();
+        }
+
+        public Personaje getPersonaje1() { return personaje1; }
+        public Personaje getPersonaje2() { return personaje2; }
+        public LocalDateTime getFechaHora() { return fechaHora; }
+
+        public string toString() {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return "Pelea entre " + personaje1.getNombre() + " (ID: " + personaje1.getId() + 
+                   ") y " + personaje2.getNombre() + " (ID: " + personaje2.getId() + 
+                   ") - Fecha: " + fechaHora.format(formatter);
+        }
+     }
