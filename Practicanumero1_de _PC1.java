@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class PracticaIPC1{
-    // Clase Personaje
+    // Clase del Personaje
     static class Personaje{
         private static int contadorId = 1;
         private int id;
@@ -43,7 +43,7 @@ public class PracticaIPC1{
     }
 }
 
-     ///clase pelea
+     ///clase de pelea
      static class pelea{
         private Personaje personaje1;
         private Personaje personaje2;
@@ -65,4 +65,19 @@ public class PracticaIPC1{
                    ") y " + personaje2.getNombre() + " (ID: " + personaje2.getId() + 
                    ") - Fecha: " + fechaHora.format(formatter);
         }
+     }
+
+     //clase de sistema
+     static class sistema{
+        private ArrayList <personaje> personajes;
+        private ArrayList <pelea> peleas;
+        private Scanner scanner;
+
+        public sistema() {
+            personajes = new ArrayList<>();
+            peleas = new ArrayList<>();
+            scanner = new Scanner(Systen.in);
+        }
+
+
      }
