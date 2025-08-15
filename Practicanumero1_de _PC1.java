@@ -14,8 +14,14 @@ public class PracticaIPC1{
         private int nivelPoder;
         public Personaje(String nombre, String arma, ArrayList<String> habilidades, int nivelPoder){
             
-
+            this.id = contadorId++;
+            this.nombre = nombre;
+            this.arma = arma;
+            this.habilidades = new ArrayList<>(habilidades);
+            this.nivelPoder = nivelPoder;
         }
 
     }
 }
+
+
