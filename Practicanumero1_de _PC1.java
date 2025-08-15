@@ -29,10 +29,16 @@ public class PracticaIPC1{
         public void sethabilidades(ArrayList<String> habilidades) { this.habilidades = new ArrayList<>(habilidades); }
         public int getnivelpoder() { return nivelpoder; }
         public void setnivelpoder(int nivelpoder) { this.nivelpoder = nivelPoder; }
-        
 
+        public String toString() {
+            return "ID: " + id + "\nNombre: " + nombre + "\nArma: " + arma + 
+                   "\nHabilidades: " + String.join(", ", habilidades) + 
+                   "\nNivel de poder: " + nivelPoder;
+        }
+        
+        public String toShortString() {
+            return "ID: " + id + " | Nombre: " + nombre + " | Nivel: " + nivelPoder;
+        }
+    
     }
 }
-
-
-
