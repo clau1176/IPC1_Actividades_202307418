@@ -41,7 +41,7 @@ public class PracticaIPC1{
         }
     
     }
-}
+
 
      ///clase de pelea
      static class pelea{
@@ -73,68 +73,314 @@ public class PracticaIPC1{
         private ArrayList<Pelea> peleas;
         private Scanner scanner;
         
-        public Sistema() {
-            personajes = new ArrayList<>();
-            peleas = new ArrayList<>();
-            scanner = new Scanner(System.in);
-        }
-        
-        public void mostrarMenu() {
-            while (true) {
-                System.out.println("\n--- MENÚ PRINCIPAL ---");
-                System.out.println("1. Agregar personaje");
-                System.out.println("2. Modificar personaje");
-                System.out.println("3. Eliminar personaje");
-                System.out.println("4. Ver datos de un personaje");
-                System.out.println("5. Ver listado de personajes");
-                System.out.println("6. Realizar pelea entre personajes");
-                System.out.println("7. Ver historial de peleas");
-                System.out.println("8. Ver datos del estudiante");
-                System.out.println("9. Salir");
-                System.out.print("Seleccione una opción: ");
+        public class Sistema {
+            private ArrayList<Personaje> personajes;
+            private ArrayList<Pelea> peleas;
+            private Scanner scanner;
+            
+            public Sistema() {
+                personajes = new ArrayList<>();
+                peleas = new ArrayList<>();
+                scanner = new Scanner(System.in);
+            }
+            
+            public void mostrarMenu() {
+                while (true) {
+                    System.out.println("\n--- MENÚ PRINCIPAL ---");
+                    System.out.println("1. Agregar personaje");
+                    System.out.println("2. Modificar personaje");
+                    System.out.println("3. Eliminar personaje");
+                    System.out.println("4. Ver datos de un personaje");
+                    System.out.println("5. Ver listado de personajes");
+                    System.out.println("6. Realizar pelea entre personajes");
+                    System.out.println("7. Ver historial de peleas");
+                    System.out.println("8. Ver datos del estudiante");
+                    System.out.println("9. Salir");
+                    System.out.print("Seleccione una opción: ");
+                    
+                    try {
+                        int opcion = Integer.parseInt(scanner.nextLine());
+                        
+                        switch (opcion) {
+                            case 1:agregarPersonaje();break;
+                            case 2:modificarPersonaje();break;
+                            case 3:eliminarPersonaje();break;
+                            case 4:verDatosPersonaje();break;
+                            case 5:verListadoPersonajes();break;
+                            case 6:realizarPelea();break;
+                            case 7:verHistorialPeleas();break;
+                            case 8:mostrarDatosEstudiante();break;
+                            case 9:
+                            System.out.println("Saliendo del sistema...");return;
+                            default:System.out.println("Opción no válida. Intente nuevamente.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Debe ingresar un número válido.");
+                    }
+                }
+            }
+            
+            private void agregarPersonaje() {
+                System.out.println("\n--- AGREGAR PERSONAJE ---");
+                //validar nombre unico personaje
+                String nombre;
+                while (true) {
+                    System.out.print("Nombre del personaje: ");
+                    nombre = scanner.nextLine().trim();
+                    
+                    if (nombre.isEmpty()) {
+                        System.out.println("Error: El nombre no puede estar vacío.");
+                        continue;
+                    }
+                    
+                    if (buscarPersonajePorNombre(nombre) != null) {
+                        System.out.println("Error: Ya existe un personaje con ese nombre.");
+                    } else {
+                        break;
+                    }
+                }
+                
+                System.out.print("Arma del personaje: ");
+                String arma = scanner.nextLine().trim();
+                
+                ArrayList<String> habilidades = new ArrayList<>();
+                System.out.println("Ingrese hasta 5 habilidades (deje vacío para terminar):");
+                for (int i = 0; i < 5; i++) {
+                    System.out.print("Habilidad " + (i+1) + ": ");
+                    String habilidad = scanner.nextLine().trim();
+                    if (habilidad.isEmpty()) {
+                        break;
+                    }
+                    habilidades.add(habilidad);
+                }
+                
+                // Validar nivel de poder
+                int nivelPoder = 0;
+                while (true) {
+                    try {
+                        System.out.print("Nivel de poder (1-100): ");
+                        nivelPoder = Integer.parseInt(scanner.nextLine());
+                        
+                        if (nivelPoder < 1 || nivelPoder > 100) {
+                            System.out.println("Error: El nivel de poder debe estar entre 1 y 100.");
+                        } else {
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Debe ingresar un número válido.");
+                    }
+                }
+                
+                Personaje nuevoPersonaje = new Personaje(nombre, arma, habilidades, nivelPoder);
+                personajes.add(nuevoPersonaje);
+                System.out.println("Personaje agregado exitosamente con ID: " + nuevoPersonaje.getId());
+            }
+            
+            private void modificarPersonaje() {
+                System.out.println("\n--- MODIFICAR PERSONAJE ---");
+                
+                if (personajes.isEmpty()) {
+                    System.out.println("No hay personajes registrados.");
+                    return;
+                }
+                
+                Personaje personaje = buscarPersonaje();
+                if (personaje == null) {
+                    System.out.println("Personaje no encontrado.");
+                    return;
+                }
+                
+                System.out.println("\nDatos actuales del personaje:");
+                System.out.println(personaje);
+                
+                System.out.println("\nIngrese los nuevos datos (deje vacío para mantener el valor actual):");
+                
+                // Modificar arma
+                System.out.print("Nueva arma [" + personaje.getArma() + "]: ");
+                String nuevaArma = scanner.nextLine().trim();
+                if (!nuevaArma.isEmpty()) {
+                    personaje.setArma(nuevaArma);
+                }
+                
+                // Modificar habilidades
+                System.out.println("Habilidades actuales: " + String.join(", ", personaje.getHabilidades()));
+                ArrayList<String> nuevasHabilidades = new ArrayList<>();
+                System.out.println("Ingrese las nuevas habilidades (una por línea, hasta 5, deje vacío para terminar):");
+                for (int i = 0; i < 5; i++) {
+                    System.out.print("Habilidad " + (i+1) + ": ");
+                    String habilidad = scanner.nextLine().trim();
+                    if (habilidad.isEmpty()) {
+                        break;
+                    }
+                    nuevasHabilidades.add(habilidad);
+                }
+                if (!nuevasHabilidades.isEmpty()) {
+                    personaje.setHabilidades(nuevasHabilidades);
+                }
+                
+                // Modificar nivel de poder
+                while (true) {
+                    try {
+                        System.out.print("Nuevo nivel de poder (1-100) [" + personaje.getNivelPoder() + "]: ");
+                        String input = scanner.nextLine().trim();
+                        if (input.isEmpty()) {
+                            break;
+                        }
+                        
+                        int nuevoNivel = Integer.parseInt(input);
+                        if (nuevoNivel < 1 || nuevoNivel > 100) {
+                            System.out.println("Error: El nivel de poder debe estar entre 1 y 100.");
+                        } else {
+                            personaje.setNivelPoder(nuevoNivel);
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Debe ingresar un número válido.");
+                    }
+                }
+                
+                System.out.println("Personaje modificado exitosamente.");
+            }
+            
+            private void eliminarPersonaje() {
+                System.out.println("\n--- ELIMINAR PERSONAJE ---");
+                
+                if (personajes.isEmpty()) {
+                    System.out.println("No hay personajes registrados.");
+                    return;
+                }
+                
+                Personaje personaje = buscarPersonaje();
+                if (personaje == null) {
+                    System.out.println("Personaje no encontrado.");
+                    return;
+                }
+                
+                System.out.println("\n¿Está seguro que desea eliminar al personaje " + personaje.getNombre() + "? (s/n)");
+                String confirmacion = scanner.nextLine().trim().toLowerCase();
+                
+                if (confirmacion.equals("s")) {
+                    personajes.remove(personaje);
+                    System.out.println("Personaje eliminado exitosamente.");
+                } else {
+                    System.out.println("Operación cancelada.");
+                }
+            }
+            
+            private void verDatosPersonaje() {
+                System.out.println("\n--- VER DATOS DE PERSONAJE ---");
+                
+                if (personajes.isEmpty()) {
+                    System.out.println("No hay personajes registrados.");
+                    return;
+                }
+                
+                Personaje personaje = buscarPersonaje();
+                if (personaje == null) {
+                    System.out.println("Personaje no encontrado.");
+                    return;
+                }
+                
+                System.out.println("\nDatos del personaje:");
+                System.out.println(personaje);
+            }
+            
+            private void verListadoPersonajes() {
+                System.out.println("\n--- LISTADO DE PERSONAJES ---");
+                
+                if (personajes.isEmpty()) {
+                    System.out.println("No hay personajes registrados.");
+                    return;
+                }
+                
+                System.out.println("\nPersonajes registrados:");
+                for (Personaje p : personajes) {
+                    System.out.println(p.toShortString());
+                }
+            }
+            
+            private void realizarPelea() {
+                System.out.println("\n--- REALIZAR PELEA ---");
+                
+                if (personajes.size() < 2) {
+                    System.out.println("Error: Se necesitan al menos 2 personajes registrados para realizar una pelea.");
+                    return;
+                }
+                
+                System.out.println("Seleccione el primer personaje:");
+                Personaje p1 = buscarPersonaje();
+                if (p1 == null) {
+                    System.out.println("Personaje no encontrado.");
+                    return;
+                }
+                
+                System.out.println("Seleccione el segundo personaje:");
+                Personaje p2 = buscarPersonaje();
+                if (p2 == null) {
+                    System.out.println("Personaje no encontrado.");
+                    return;
+                }
+                
+                if (p1.getId() == p2.getId()) {
+                    System.out.println("Error: No puede pelear un personaje consigo mismo.");
+                    return;
+                }
+                
+                Pelea nuevaPelea = new Pelea(p1, p2);
+                peleas.add(nuevaPelea);
+                System.out.println("Pelea registrada exitosamente:");
+                System.out.println(nuevaPelea);
+            }
+            
+            private void verHistorialPeleas() {
+                System.out.println("\n--- HISTORIAL DE PELEAS ---");
+                
+                if (peleas.isEmpty()) {
+                    System.out.println("No hay peleas registradas.");
+                    return;
+                }
+                
+                System.out.println("\nPeleas registradas:");
+                for (Pelea pelea : peleas) {
+                    System.out.println(pelea);
+                }
+            }
+            
+            private void mostrarDatosEstudiante() {
+                System.out.println("\n--- DATOS DEL ESTUDIANTE ---");
+                System.out.println("Nombre: [Claudio Arrillaga]");
+                System.out.println("Carnet: [202307418]");
+                System.out.println("Curso: Introducción a la Programación y Computación 1");
+                System.out.println("Sección: [A]");
+            }
+            
+            private Personaje buscarPersonaje() {
+                System.out.print("Ingrese ID o nombre del personaje: ");
+                String input = scanner.nextLine().trim();
                 
                 try {
-                    int opcion = Integer.parseInt(scanner.nextLine());
-                    
-                    switch (opcion) {
-                        case 1: agregarPersonaje(); break;
-                        case 2: modificarPersonaje(); break;
-                        case 3: eliminarPersonaje(); break;
-                        case 4: verDatosPersonaje(); break;
-                        case 5: verListadoPersonajes(); break;
-                        case 6: realizarPelea(); break;
-                        case 7: verHistorialPeleas(); break;
-                        case 8: mostrarDatosEstudiante(); break;
-                        case 9:
-                            System.out.println("Saliendo del sistema...");
-                            return;
-                        default:
-                            System.out.println("Opción no válida. Intente nuevamente.");
+                    int id = Integer.parseInt(input);
+                    for (Personaje p : personajes) {
+                        if (p.getId() == id) {
+                            return p;
+                        }
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Debe ingresar un número válido.");
+                    // Buscar por nombre si no es número
+                    return buscarPersonajePorNombre(input);
                 }
+                
+                return null;
             }
-        }
-       
-
-        private void agregarPersonaje() {
-            System.out.println("\n--- AGREGAR PERSONAJE ---");
             
-            String nombre;
-            while (true) {
-                System.out.print("Nombre del personaje: ");
-                nombre = scanner.nextLine().trim();
-                
-                if (nombre.isEmpty()) {
-                    System.out.println("Error: El nombre no puede estar vacío.");
-                    continue;
+            private Personaje buscarPersonajePorNombre(String nombre) {
+                for (Personaje p : personajes) {
+                    if (p.getNombre().equalsIgnoreCase(nombre)) {
+                        return p;
+                    }
                 }
-                
-                if (buscarPersonajePorNombre(nombre) != null) {
-                    System.out.println("Error: Ya existe un personaje con ese nombre.");
-                } else {
-                    break;
-                }
+                return null;
             }
         }
+    }
+}
