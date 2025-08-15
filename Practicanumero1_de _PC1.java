@@ -116,4 +116,25 @@ public class PracticaIPC1{
                 }
             }
         }
-    }   
+       
+
+        private void agregarPersonaje() {
+            System.out.println("\n--- AGREGAR PERSONAJE ---");
+            
+            String nombre;
+            while (true) {
+                System.out.print("Nombre del personaje: ");
+                nombre = scanner.nextLine().trim();
+                
+                if (nombre.isEmpty()) {
+                    System.out.println("Error: El nombre no puede estar vacío.");
+                    continue;
+                }
+                
+                if (buscarPersonajePorNombre(nombre) != null) {
+                    System.out.println("Error: Ya existe un personaje con ese nombre.");
+                } else {
+                    break;
+                }
+            }
+        }
