@@ -1,27 +1,27 @@
 import java.util.ArrayList;
-    import java.util.Scanner;
-    import java.time.LocalDateTime;
-    import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public class Practicanumero1_de_IPC1 {
+public class Practicanumero1_de_IPC1 {
 
-        // Clase Personaje
-        static class Personaje {
-            private static int contadorId = 1;
-            private int id;
-            private String nombre;
-            private String arma;
-            private ArrayList<String> habilidades;
-            private int nivelPoder;
-            
-            public Personaje(String nombre, String arma, ArrayList<String> habilidades, int nivelPoder) {
-                this.id = contadorId++;
-                this.nombre = nombre;
-                this.arma = arma;
-                this.habilidades = new ArrayList<>(habilidades);
-                this.nivelPoder = nivelPoder;
-            }
-            
+    // Clase Personaje
+    static class Personaje {
+        private static int contadorId = 1;
+        private int id;
+        private String nombre;
+        private String arma;
+        private ArrayList<String> habilidades;
+        private int nivelPoder;
+        
+        public Personaje(String nombre, String arma, ArrayList<String> habilidades, int nivelPoder) {
+            this.id = contadorId++;
+            this.nombre = nombre;
+            this.arma = arma;
+            this.habilidades = new ArrayList<>(habilidades);
+            this.nivelPoder = nivelPoder;
+        }
+        
         public int getId() { return id; }
         public String getNombre() { return nombre; }
         public void setNombre(String nombre) { this.nombre = nombre; }
@@ -32,7 +32,7 @@ import java.util.ArrayList;
         public int getNivelPoder() { return nivelPoder; }
         public void setNivelPoder(int nivelPoder) { this.nivelPoder = nivelPoder; }
         
-        @Override
+        
         public String toString() {
             return "ID: " + id + 
                    "\nNombre: " + nombre + 
@@ -62,12 +62,12 @@ import java.util.ArrayList;
         public Personaje getPersonaje2() { return personaje2; }
         public LocalDateTime getFechaHora() { return fechaHora; }
         
-        @Override
+        
         public String toString() {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             return "Pelea entre " + personaje1.getNombre() + " (ID: " + personaje1.getId() + 
                    ") y " + personaje2.getNombre() + " (ID: " + personaje2.getId() + 
-                   ") - Fecha: " + fechaHora.format(formatter);
+                   ")\nFecha y hora: " + fechaHora.format(formatter);
         }
     }
 
@@ -89,7 +89,7 @@ import java.util.ArrayList;
         
         private void mostrarMenu() {
             while (true) {
-                System.out.println("\n--- MENU PRINCIPAL ---");
+                System.out.println("\n--- MENÚ PRINCIPAL ---");
                 System.out.println("1. Agregar personaje");
                 System.out.println("2. Modificar personaje");
                 System.out.println("3. Eliminar personaje");
@@ -149,12 +149,16 @@ import java.util.ArrayList;
             String arma = scanner.nextLine().trim();
             
             ArrayList<String> habilidades = new ArrayList<>();
-            System.out.println("Ingrese hasta 5 habilidades (deje vacío para terminar):");
+            System.out.println("Ingrese hasta 5 habilidades (ingrese 'fin' para terminar antes):");
             for (int i = 0; i < 5; i++) {
                 System.out.print("Habilidad " + (i+1) + ": ");
                 String habilidad = scanner.nextLine().trim();
-                if (habilidad.isEmpty()) break;
-                habilidades.add(habilidad);
+                if (habilidad.equalsIgnoreCase("fin")) {
+                    break;
+                }
+                if (!habilidad.isEmpty()) {
+                    habilidades.add(habilidad);
+                }
             }
             
             int nivelPoder = 0;
@@ -178,17 +182,41 @@ import java.util.ArrayList;
             System.out.println("Personaje agregado exitosamente con ID: " + nuevoPersonaje.getId());
         }
         
+        private Personaje buscarPersonaje() {
+            if (personajes.isEmpty()) {
+                System.out.println("No hay personajes registrados.");
+                return null;
+            }
+            
+            verListadoPersonajes(); // Muestra la lista de personajes disponibles
+            
+            System.out.print("\nIngrese ID o nombre del personaje: ");
+            String input = scanner.nextLine().trim();
+            
+            try {
+                int id = Integer.parseInt(input);
+                for (Personaje p : personajes) {
+                    if (p.getId() == id) {
+                        return p;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                for (Personaje p : personajes) {
+                    if (p.getNombre().equalsIgnoreCase(input)) {
+                        return p;
+                    }
+                }
+            }
+            
+            System.out.println("Error: Personaje no encontrado.");
+            return null;
+        }
+
         private void modificarPersonaje() {
             System.out.println("\n--- MODIFICAR PERSONAJE ---");
             
-            if (personajes.isEmpty()) {
-                System.out.println("No hay personajes registrados.");
-                return;
-            }
-            
             Personaje personaje = buscarPersonaje();
             if (personaje == null) {
-                System.out.println("Personaje no encontrado.");
                 return;
             }
             
@@ -205,12 +233,16 @@ import java.util.ArrayList;
             
             System.out.println("Habilidades actuales: " + String.join(", ", personaje.getHabilidades()));
             ArrayList<String> nuevasHabilidades = new ArrayList<>();
-            System.out.println("Ingrese las nuevas habilidades (una por línea, hasta 5, deje vacío para terminar):");
+            System.out.println("Ingrese las nuevas habilidades (una por línea, ingrese 'fin' para terminar):");
             for (int i = 0; i < 5; i++) {
                 System.out.print("Habilidad " + (i+1) + ": ");
                 String habilidad = scanner.nextLine().trim();
-                if (habilidad.isEmpty()) break;
-                nuevasHabilidades.add(habilidad);
+                if (habilidad.equalsIgnoreCase("fin")) {
+                    break;
+                }
+                if (!habilidad.isEmpty()) {
+                    nuevasHabilidades.add(habilidad);
+                }
             }
             if (!nuevasHabilidades.isEmpty()) {
                 personaje.setHabilidades(nuevasHabilidades);
@@ -240,14 +272,8 @@ import java.util.ArrayList;
         private void eliminarPersonaje() {
             System.out.println("\n--- ELIMINAR PERSONAJE ---");
             
-            if (personajes.isEmpty()) {
-                System.out.println("No hay personajes registrados.");
-                return;
-            }
-            
             Personaje personaje = buscarPersonaje();
             if (personaje == null) {
-                System.out.println("Personaje no encontrado.");
                 return;
             }
             
@@ -265,19 +291,11 @@ import java.util.ArrayList;
         private void verDatosPersonaje() {
             System.out.println("\n--- VER DATOS DE PERSONAJE ---");
             
-            if (personajes.isEmpty()) {
-                System.out.println("No hay personajes registrados.");
-                return;
-            }
-            
             Personaje personaje = buscarPersonaje();
-            if (personaje == null) {
-                System.out.println("Personaje no encontrado.");
-                return;
+            if (personaje != null) {
+                System.out.println("\nDatos del personaje:");
+                System.out.println(personaje);
             }
-            
-            System.out.println("\nDatos del personaje:");
-            System.out.println(personaje);
         }
         
         private void verListadoPersonajes() {
@@ -288,9 +306,11 @@ import java.util.ArrayList;
                 return;
             }
             
-            System.out.println("\nPersonajes registrados:");
+            System.out.println("\nPersonajes registrados (" + personajes.size() + "):");
+            System.out.println("=================================");
             for (Personaje p : personajes) {
-                System.out.println(p.toShortString());
+                System.out.println(p.toString());
+                System.out.println("---------------------------------");
             }
         }
         
@@ -305,14 +325,12 @@ import java.util.ArrayList;
             System.out.println("Seleccione el primer personaje:");
             Personaje p1 = buscarPersonaje();
             if (p1 == null) {
-                System.out.println("Personaje no encontrado.");
                 return;
             }
             
             System.out.println("Seleccione el segundo personaje:");
             Personaje p2 = buscarPersonaje();
             if (p2 == null) {
-                System.out.println("Personaje no encontrado.");
                 return;
             }
             
@@ -323,7 +341,7 @@ import java.util.ArrayList;
             
             Pelea nuevaPelea = new Pelea(p1, p2);
             peleas.add(nuevaPelea);
-            System.out.println("Pelea registrada exitosamente:");
+            System.out.println("\nPelea registrada exitosamente:");
             System.out.println(nuevaPelea);
         }
         
@@ -335,36 +353,23 @@ import java.util.ArrayList;
                 return;
             }
             
-            System.out.println("\nPeleas registradas:");
+            System.out.println("\nHistorial de peleas (" + peleas.size() + "):");
+            System.out.println("=================================");
             for (Pelea pelea : peleas) {
-                System.out.println(pelea);
+                System.out.println(pelea.toString());
+                System.out.println("---------------------------------");
             }
         }
         
         private void mostrarDatosEstudiante() {
             System.out.println("\n--- DATOS DEL ESTUDIANTE ---");
-            System.out.println("Nombre: [TU NOMBRE COMPLETO]");
-            System.out.println("Carnet: [TU NÚMERO DE CARNET]");
+            System.out.println("=================================");
+            System.out.println("Nombre: Claudio Arrillaga");
+            System.out.println("Carnet: 202307418");
             System.out.println("Curso: Introducción a la Programación y Computación 1");
-            System.out.println("Sección: [TU SECCIÓN]");
-        }
-        
-        private Personaje buscarPersonaje() {
-            System.out.print("Ingrese ID o nombre del personaje: ");
-            String input = scanner.nextLine().trim();
-            
-            try {
-                int id = Integer.parseInt(input);
-                for (Personaje p : personajes) {
-                    if (p.getId() == id) {
-                        return p;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                return buscarPersonajePorNombre(input);
-            }
-            
-            return null;
+            System.out.println("Sección: A");
+            System.out.println("Fecha: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            System.out.println("=================================");
         }
         
         private Personaje buscarPersonajePorNombre(String nombre) {
@@ -382,4 +387,3 @@ import java.util.ArrayList;
         sistema.iniciar();
     }
 }
-
