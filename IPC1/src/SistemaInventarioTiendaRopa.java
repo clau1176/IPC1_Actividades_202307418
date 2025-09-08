@@ -77,3 +77,63 @@ public class SistemaInventarioTiendaRopa {
     
 
 }
+
+// Función para agregar un nuevo producto
+    private static void agregarProducto() {
+        System.out.println("\n--- AGREGAR PRODUCTO ---");
+        
+        System.out.print("Código único: ");
+        String codigo = scanner.nextLine();
+        
+        // Validar que el código sea único
+        for(int i = 0; i < contadorProductos; i++) {
+            if(inventario[i].getCodigo().equals(codigo)) {
+                System.out.println("Error: Ya existe un producto con este código.");
+                registrarBitacora("Agregar Producto", "Error: Código duplicado - " + codigo);
+                return;
+            }
+        }
+        
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
+        
+        System.out.print("Categoría: ");
+        String categoria = scanner.nextLine();
+        
+        double precio = 0;
+        while (true) {
+            try {
+                System.out.print("Precio: ");
+                precio = Double.parseDouble(scanner.nextLine());
+                if (precio <= 0) {
+                    System.out.println("Error: El precio debe ser positivo.");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un valor numérico válido.");
+            }
+        }
+        
+        int cantidad = 0;
+        while (true) {
+            try {
+                System.out.print("Cantidad en stock: ");
+                cantidad = Integer.parseInt(scanner.nextLine());
+                if (cantidad < 0) {
+                    System.out.println("Error: La cantidad debe ser positiva.");
+                    continue;
+                }
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un valor numérico válido.");
+            }
+        }
+        
+        // Crear y agregar producto
+        inventario[contadorProductos] = new Producto(codigo, nombre, categoria, precio, cantidad);
+        contadorProductos++;
+        
+        System.out.println("Producto agregado exitosamente.");
+        registrarBitacora("Agregar Producto", "Éxito: Producto " + codigo + " agregado");
+    }
