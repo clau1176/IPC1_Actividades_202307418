@@ -137,3 +137,74 @@ public class SistemaInventarioTiendaRopa {
         System.out.println("Producto agregado exitosamente.");
         registrarBitacora("Agregar Producto", "Éxito: Producto " + codigo + " agregado");
     }
+// Función para buscar productos
+    private static void buscarProducto() {
+        System.out.println("\n--- BUSCAR PRODUCTO ---");
+        System.out.println("1. Por código");
+        System.out.println("2. Por nombre");
+        System.out.println("3. Por categoría");
+        System.out.print("Seleccione criterio de búsqueda: ");
+        
+        int criterio;
+        try {
+            criterio = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Opción no válida.");
+            return;
+        }
+        
+        String busqueda;
+        boolean encontrado = false;
+        
+        switch(criterio) {
+            case 1:
+                System.out.print("Ingrese código: ");
+                busqueda = scanner.nextLine();
+                System.out.println("\nResultados de la búsqueda:");
+                
+                for(int i = 0; i < contadorProductos; i++) {
+                    if(inventario[i].getCodigo().equals(busqueda)) {
+                        System.out.println(inventario[i]);
+                        encontrado = true;
+                    }
+                }
+                break;
+                
+            case 2:
+                System.out.print("Ingrese nombre: ");
+                busqueda = scanner.nextLine();
+                System.out.println("\nResultados de la búsqueda:");
+                
+                for(int i = 0; i < contadorProductos; i++) {
+                    if(inventario[i].getNombre().toLowerCase().contains(busqueda.toLowerCase())) {
+                        System.out.println(inventario[i]);
+                        encontrado = true;
+                    }
+                }
+                break;
+                
+            case 3:
+                System.out.print("Ingrese categoría: ");
+                busqueda = scanner.nextLine();
+                System.out.println("\nResultados de la búsqueda:");
+                
+                for(int i = 0; i < contadorProductos; i++) {
+                    if(inventario[i].getCategoria().toLowerCase().contains(busqueda.toLowerCase())) {
+                        System.out.println(inventario[i]);
+                        encontrado = true;
+                    }
+                }
+                break;
+                
+            default:
+                System.out.println("Opción no válida.");
+                return;
+        }
+        
+        if(!encontrado) {
+            System.out.println("No se encontraron productos.");
+        }
+        
+        registrarBitacora("Buscar Producto", "Búsqueda realizada");
+    }
+    
